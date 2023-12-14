@@ -86,10 +86,6 @@
     shell = pkgs.zsh;
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "docker" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      firefox
-      tree
-    ];
   };
 
   # List packages installed in system profile. To search, run:
