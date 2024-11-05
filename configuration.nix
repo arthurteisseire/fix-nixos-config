@@ -40,6 +40,9 @@
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
 
+  # Xbox controller
+  hardware.xone.enable = true;
+
   # Set your time zone.
   time.timeZone = "Europe/Paris";
 
@@ -67,6 +70,11 @@
   services.gnome.core-shell.enable = true;
   services.gnome.gnome-settings-daemon.enable = true;
 
+  # Hyprland
+  programs.hyprland.enable = true;
+
+  # For app development
+  programs.adb.enable = true;
 
 
   # Enable CUPS to print documents.
@@ -85,7 +93,7 @@
   users.users.arthur = {
     shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "plugdev" "adbusers" "kvm" "wheel" "networkmanager" "video" "docker" ]; # Enable ‘sudo’ for the user.
   };
 
   # List packages installed in system profile. To search, run:
@@ -114,16 +122,22 @@
     slack
     gparted
     blender
+    libresprite
     cgoban
     qdirstat
     transmission
     ntfs3g
     xorg.xkbcomp
+    pavucontrol
+    openrgb-with-all-plugins
+    openrgb
 
     nix-prefetch
     nix-prefetch-git
     direnv
     nix-direnv
+
+    networkmanagerapplet
 
     # gtk
     gtk-engine-murrine
@@ -134,12 +148,20 @@
     zsh
     oh-my-zsh
 
+    android-studio
+
     # unfree
     (jetbrains.idea-ultimate.override { jdk = pkgs.jetbrains.jdk; })
     (jetbrains.clion.override { jdk = pkgs.jetbrains.jdk; })
     (jetbrains.pycharm-community.override { jdk = pkgs.jetbrains.jdk; })
     obs-studio
+    discord
     handbrake
+    parsec-bin
+  ];
+
+  services.udev.packages = [
+    pkgs.android-udev-rules
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -174,6 +196,7 @@
       gconfig = "vim /etc/nixos/configuration.nix";
       sconfig = "vim /etc/nixos/my_sway.nix";
       i3exit = "~/.config/i3/i3exit";
+      current = "source ~/Projects/current.sh";
     };
   };
 
@@ -200,6 +223,9 @@
 	environment.interactiveShellInit = ''
 		eval "$(direnv hook zsh)"
   '';
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  hardware.glasgow.enable = true;
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
